@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
 
-function App() {
+import { getData, getFullData, filterPosts } from './api/api';
+import SearchBar from "./components/SearchBar";
+import Temp from "./components/temp";
+
+
+const App = () => {
+  const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
+  
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(6);
+  const [allPosts, setAllPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const filteredPosts = filterPosts(posts, searchQuery);
+
+  useEffect(() => {
+    getFullData(BASE_URL).then(post => setAllPosts(post))
+  }, []);
+  
+  useEffect(() => {
+    getData(BASE_URL, page, limit).then(post => setPosts(post));
+  }, [page, limit]);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="uk-main">
+      <SearchBar 
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+      <div className="uk-grid uk-child-width-1-2@s uk-child-width-1-3@m">
+        {filteredPosts.map(post => (
+          <Temp
+            key={post.id}
+            post={post}
+          />
+        ))}
+      </div>
     </div>
   );
 }
