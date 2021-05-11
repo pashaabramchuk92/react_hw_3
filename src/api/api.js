@@ -3,15 +3,11 @@ const fetcher = async (url) => {
   return await resp.json();
 }
 
-const getFullData = async (url) => {
-  return await fetcher(url);
-}
-
 const getData = async (url, page, limit) => {
   return await fetcher(`${url}?_page=${page}&_limit=${limit}`);
 }
 
-const filterPosts = (data, query) => {
+const searchPost = (data, query) => {
   if (!query) {
     return data;
   }
@@ -22,9 +18,22 @@ const filterPosts = (data, query) => {
   });
 };
 
+const filterPosts = (order, data) => {
+  switch(order) {
+    case 'asc':
+      return data.sort((a, b) => a.id - b.id);
+    case 'desc':
+      return data.sort((a, b) => b.id - a.id);
+  }      
+}
+
+const loadMore = async () => {
+  
+}
 
 export {
   getData,
-  getFullData,
-  filterPosts
+  searchPost,
+  filterPosts,
+  loadMore
 }
