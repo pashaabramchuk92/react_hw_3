@@ -3,8 +3,16 @@ const fetcher = async (url) => {
   return await resp.json();
 }
 
+// const getData = async (url, page, limit) => {
+//   return await fetcher(`${url}?_page=${page}&_limit=${limit}`);
+// }
+
 const getData = async (url, page, limit) => {
   return await fetcher(`${url}?_page=${page}&_limit=${limit}`);
+}
+
+const getMoreData = async(url, end) => {
+  return await fetcher(`${url}?_start=0&_end=${end}`);
 }
 
 const searchPost = (data, query) => {
@@ -18,7 +26,7 @@ const searchPost = (data, query) => {
   });
 };
 
-const filterPosts = (order, data) => {
+const toggleOrderData = (order, data) => {
   switch(order) {
     case 'asc':
       return data.sort((a, b) => a.id - b.id);
@@ -27,13 +35,9 @@ const filterPosts = (order, data) => {
   }      
 }
 
-const loadMore = async () => {
-  
-}
-
 export {
   getData,
+  getMoreData,
+  toggleOrderData,
   searchPost,
-  filterPosts,
-  loadMore
 }
