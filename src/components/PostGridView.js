@@ -1,4 +1,4 @@
-const Post = ({ post }) => {
+const PostGridView = ({ post }) => {
 
   const shortTitle = post.title.length > 6 ? `${post.title.slice(0, 6)}...` : post.title;
   const shortBody = post.body.length > 100 ? `${post.body.slice(0, 100)}...` : post.body;
@@ -23,4 +23,4 @@ const Post = ({ post }) => {
   )
 }
 
-export default Post;
+export default PostGridView;
