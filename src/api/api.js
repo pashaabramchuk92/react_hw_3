@@ -34,8 +34,16 @@ const toggleOrderData = (order, data) => {
       return data.sort((a, b) => b.id - a.id);
     default:
       return
-  }   
+  }
 }
+
+// const deleteData = async (url, id) => {
+//   const resp = await fetch(`${url}/${id}`, {
+//     method: "DELETE",
+//   });
+
+//   return await resp.json();
+// }
 
 export {
   getData,
@@ -43,4 +51,5 @@ export {
   getAllData,
   toggleOrderData,
   searchPost,
+  // deleteData
 }

@@ -5,19 +5,15 @@ import {
   getMoreData,
   getAllData,
   toggleOrderData,
-  searchPost
+  searchPost,
+  // deleteData
 } from './api/api';
-import FilterPosts from "./components/FilterPosts";
-import SetShowPosts from "./components/SetShowPosts";
-import SearchBar from "./components/SearchBar";
-import PostGridView from "./components/PostGridView";
 import LoadMore from "./components/LoadMore";
-import PostListView from "./components/PostListView";
 import PostsGridPage from "./containers/PostsGridPage";
 import PostsListPage from "./containers/PostsListPage";
-import ToggleView from "./components/ToggleView";
 import NavBar from "./containers/NavBar";
 import PageList from "./components/PageList";
+import Header from "./components/Header";
 
 const App = () => {
   const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
@@ -66,10 +62,18 @@ const App = () => {
     setGridView(!gridView);
   }
 
+  const handleDeletePost = (id) => {
+    setShowPosts((serchedPost) => serchedPost.filter(post => post.id !== id));
+  }
+
   const countPages = Math.ceil(allPosts.length / limit);
 
   return (
     <div className="uk-main">
+      <Header
+        handleDeletePost={handleDeletePost}
+        posts={serchedPost}
+      />
       <div class="uk-section">
         <div class="uk-container">
           <NavBar
