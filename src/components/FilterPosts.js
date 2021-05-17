@@ -1,5 +1,4 @@
 const FilterPosts = ({ setOrder }) => {
-  
   return (
     <select
       className="uk-select uk-width-small uk-margin-auto-left"

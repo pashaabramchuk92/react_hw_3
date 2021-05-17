@@ -1,99 +1,70 @@
 import { useEffect, useState } from "react";
 
-import {
-  getData,
-  getMoreData,
-  getAllData,
-  toggleOrderData,
-  searchPost,
-  // deleteData
-} from './api/api';
+import { getData, getMoreData } from './api/api';
 import LoadMore from "./components/LoadMore";
-import PostsGridPage from "./containers/PostsGridPage";
-import PostsListPage from "./containers/PostsListPage";
-import NavBar from "./containers/NavBar";
+import PostsGridPage from "./components/PostsGridPage";
+import PostsListPage from "./components/PostsListPage";
+import NavBar from "./components/NavBar";
 import PageList from "./components/PageList";
 import Header from "./components/Header";
 
 const App = () => {
   const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-  const [showPosts, setShowPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
-  const [next, setNext] = useState(limit);
+  const [query, setQuery] = useState('');
   const [order, setOrder] = useState('asc');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [listView, setListView] = useState(false);
   const [gridView, setGridView] = useState(true);
-  const [allPosts, setAllPosts] = useState([]);
+  const [next, setNext] = useState(6);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const posts = await getData(BASE_URL, page, limit);
-      setShowPosts(posts);
+      const posts = await getData(BASE_URL, page, limit, order, query);
+      setPosts(posts);
     }
     fetchPosts();
-  }, [page, limit]);
+  }, [page, limit, order, query]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const posts = await getMoreData(BASE_URL, 0, next, order);
+      setPosts(posts);
+    }
+    fetchPosts();
+  }, [next, order]);
+
+  const handleToggleView = () => setGridView(!gridView);
+
+  const handleLoadMore = () => {
+    setQuery('');
+    setNext(next + Number(limit));
+  };
+
+
+  //pagination, like/unlike, header, X-total-count?
   
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await getMoreData(BASE_URL, next);
-      setShowPosts(posts);
-    }
-    fetchPosts();
-  }, [next]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await getAllData(BASE_URL);
-      setAllPosts(posts);
-    }
-    fetchPosts();
-  }, []);
-
-  const serchedPost = searchPost(showPosts, searchQuery);
-  toggleOrderData(order, showPosts);
-
-  const handleLoadMore = () => setNext(Number(limit) + next);
-
-  const handleToggleView = () => {
-    setListView(!listView);
-    setGridView(!gridView);
-  }
-
-  const handleDeletePost = (id) => {
-    setShowPosts((serchedPost) => serchedPost.filter(post => post.id !== id));
-  }
-
-  const countPages = Math.ceil(allPosts.length / limit);
-
   return (
     <div className="uk-main">
-      <Header
-        handleDeletePost={handleDeletePost}
-        posts={serchedPost}
-      />
+      <Header />
       <div class="uk-section">
         <div class="uk-container">
           <NavBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
+            setQuery={setQuery}
             setOrder={setOrder}
             setLimit={setLimit}
             gridView={gridView}
-            listView={listView}
             handleToggleView={handleToggleView}
           />
-          {gridView && <PostsGridPage serchedPost={serchedPost} />}
-          {listView && <PostsListPage serchedPost={serchedPost} />}
+          {gridView  
+            ? <PostsGridPage posts={posts} /> 
+            : <PostsListPage posts={posts} />}
           <LoadMore
             handleLoadMore={handleLoadMore}
           />
           <PageList
-            countPages={countPages}
-            page={page}
-            setPage={setPage}
+
           />
         </div>
       </div>

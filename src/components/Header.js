@@ -1,4 +1,4 @@
-const Header = ({ handleDeletePost, posts }) => {
+const Header = () => {
 
   return (
     <nav class="uk-navbar uk-navbar-container" uk-navbar="">
@@ -7,13 +7,13 @@ const Header = ({ handleDeletePost, posts }) => {
           <li class="uk-active">
             <a
               href="/"
-              onClick={(e) => e.preventDefault()}
+              
             >Posts</a>
           </li>
           <li>
             <a
               href="/"
-              onClick={(e) => e.preventDefault()}
+              
             >Albums</a>
           </li>
         </ul>
@@ -36,15 +36,12 @@ const Header = ({ handleDeletePost, posts }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {posts.map(post => (
                       <tr>
-                        <td>{post.title.slice(0, 6)}</td>
+                        <td>title</td>
                         <td class="uk-text-right">
                           <button
                             class="uk-button uk-icon" type="button" uk-icon="icon: close;"
-                            onClick={(e) => {
-                              handleDeletePost(post.id)
-                            }}
+                            
                           >
                             <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="close">
                               <path fill="none" stroke="#000" stroke-width="1.06" d="M16,16 L4,4"></path><path fill="none" stroke="#000" stroke-width="1.06" d="M16,4 L4,16"></path>
@@ -52,7 +49,6 @@ const Header = ({ handleDeletePost, posts }) => {
                           </button>
                         </td>
                       </tr>
-                    ))}
                   </tbody>
                 </table>
               </div>

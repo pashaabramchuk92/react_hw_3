@@ -1,6 +1,6 @@
-const ToggleView = ({ gridView, listView, handleToggleView }) => {
+const ToggleView = ({ gridView, handleToggleView }) => {
   const activeClassGrid = gridView ? 'uk-active' : '';
-  const activeClassList = listView ? 'uk-active' : '';
+  const activeClassList = gridView ? '' : 'uk-active';
 
   return (
     <div className="uk-button-group uk-margin-left">
@@ -12,7 +12,6 @@ const ToggleView = ({ gridView, listView, handleToggleView }) => {
       </button>
       <button
         className={"uk-button uk-button-default" + activeClassList}
-        // onClick={handleToggleView}
         onClick={handleToggleView}
       >
         <span uk-icon="icon:  list"></span>

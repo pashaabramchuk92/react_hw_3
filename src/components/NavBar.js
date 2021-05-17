@@ -1,22 +1,19 @@
-import FilterPosts from "../components/FilterPosts";
-import SearchBar from "../components/SearchBar";
-import SetShowPosts from "../components/SetShowPosts";
-import ToggleView from "../components/ToggleView";
+import FilterPosts from "./FilterPosts";
+import SearchBar from "./SearchBar";
+import SetShowPosts from "./SetShowPosts";
+import ToggleView from "./ToggleView";
 
 const NavBar = ({
-  searchQuery,
-  setSearchQuery,
+  setQuery,
   setOrder,
   setLimit,
   gridView,
-  listView,
-  handleToggleView
+  handleToggleView,
 }) => {
   return (
     <div class="uk-margin-medium-bottom uk-flex">
       <SearchBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        setQuery={setQuery}
       />
       <FilterPosts
         setOrder={setOrder}
@@ -26,7 +23,6 @@ const NavBar = ({
       />
       <ToggleView
         gridView={gridView}
-        listView={listView}
         handleToggleView={handleToggleView}
       />
     </div>

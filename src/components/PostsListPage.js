@@ -1,9 +1,9 @@
 import PostListView from "../components/PostListView"
 
-const PostsListPage = ({ serchedPost }) => {
+const PostsListPage = ({ posts }) => {
   return (
     <div className="uk-grid uk-child-width-1-2@s uk-child-width-1-2@m">
-      {serchedPost.map(post => (
+      {posts.map(post => (
         <PostListView
           key={post.id}
           post={post}

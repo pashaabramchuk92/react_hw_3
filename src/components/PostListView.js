@@ -1,8 +1,5 @@
 const PostListView = ({ post }) => {
 
-  const shortTitle = post.title.length > 6 ? `${post.title.slice(0, 6)}...` : post.title;
-  const shortBody = post.body.length > 100 ? `${post.body.slice(0, 100)}...` : post.body;
-
   return (
     <div>
       <div
@@ -16,10 +13,10 @@ const PostListView = ({ post }) => {
         <div className="">
           <div className="uk-card-body">
               <h3 className="uk-card-title uk-margin-remove-bottom uk-flex uk-flex-middle uk-flex-between">
-                {shortTitle} <a href="/" className="uk-icon-link" uk-icon="heart"></a>
+                {`${post.title.slice(0, 6)}...`} <a href="/" className="uk-icon-link" uk-icon="heart"></a>
               </h3>
             <p>
-              {shortBody}
+              {`${post.body.slice(0, 70)}...`}
             </p>
             <a href="post.html" className="uk-button uk-button-text">Read more</a>
           </div>
