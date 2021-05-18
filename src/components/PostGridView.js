@@ -1,5 +1,8 @@
-const PostGridView = ({ post }) => {
+import { useState } from "react";
 
+const PostGridView = ({ post }) => {
+  const [isLike, setIsLike] = useState(false);
+  const [like, setLike] = useState('red');
 
   return (
     <div>
@@ -7,7 +10,21 @@ const PostGridView = ({ post }) => {
           <div className="uk-card-header">
               <h3 className="uk-card-title uk-margin-remove-bottom uk-flex uk-flex-middle uk-flex-between">
                 {`${post.title.slice(0, 6)}...`} {post.id}
-                <a className="uk-icon-link" uk-icon="heart"></a>
+                <a
+                  href="/"
+                  className="uk-icon-link"
+                  uk-icon="heart"
+                  style={{color: isLike ? like : ''}}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsLike(true);
+                    if(isLike) {
+                      setIsLike(false);
+                    }
+                  }}
+                >
+
+                </a>
               </h3>
           </div>
           <div className="uk-card-body">

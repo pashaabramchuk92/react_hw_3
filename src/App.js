@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getData, getMoreData } from './api/api';
+import { getData, getMoreData, getTotalCount } from './api/api';
 import LoadMore from "./components/LoadMore";
 import PostsGridPage from "./components/PostsGridPage";
 import PostsListPage from "./components/PostsListPage";
@@ -18,6 +18,15 @@ const App = () => {
   const [order, setOrder] = useState('asc');
   const [gridView, setGridView] = useState(true);
   const [next, setNext] = useState(6);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const fetchTotal = async () => {
+      const totalCount = await getTotalCount(BASE_URL, page);
+      setTotal(totalCount);
+    }
+    fetchTotal();
+  }, [total]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -42,9 +51,6 @@ const App = () => {
     setNext(next + Number(limit));
   };
 
-
-  //pagination, like/unlike, header, X-total-count?
-  
   return (
     <div className="uk-main">
       <Header />
@@ -58,13 +64,18 @@ const App = () => {
             handleToggleView={handleToggleView}
           />
           {gridView  
-            ? <PostsGridPage posts={posts} /> 
+            ? <PostsGridPage
+                posts={posts}
+                /> 
             : <PostsListPage posts={posts} />}
           <LoadMore
             handleLoadMore={handleLoadMore}
           />
           <PageList
-
+            total={total}
+            limit={limit}
+            page={page}
+            setPage={setPage}
           />
         </div>
       </div>
