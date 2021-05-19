@@ -2,98 +2,53 @@ import { useEffect, useState } from "react";
 
 import {
   getData,
-  getMoreData,
-  getAllData,
-  toggleOrderData,
-  searchPost,
-  // deleteData
+  searchData,
 } from './api/api';
 import LoadMore from "./components/LoadMore";
-import PostsGridPage from "./containers/PostsGridPage";
-import PostsListPage from "./containers/PostsListPage";
-import NavBar from "./containers/NavBar";
+import PostsGridPage from "./components/PostsGridPage";
+import PostsListPage from "./components/PostsListPage";
+import NavBar from "./components/NavBar";
 import PageList from "./components/PageList";
 import Header from "./components/Header";
 
 const App = () => {
   const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-  const [showPosts, setShowPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [searchedPosts, setSearchedPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
-  const [next, setNext] = useState(limit);
-  const [order, setOrder] = useState('asc');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [listView, setListView] = useState(false);
-  const [gridView, setGridView] = useState(true);
-  const [allPosts, setAllPosts] = useState([]);
+  const [query, setQuery] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       const posts = await getData(BASE_URL, page, limit);
-      setShowPosts(posts);
-    }
-    fetchPosts();
-  }, [page, limit]);
-  
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await getMoreData(BASE_URL, next);
-      setShowPosts(posts);
-    }
-    fetchPosts();
-  }, [next]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await getAllData(BASE_URL);
-      setAllPosts(posts);
+      setPosts(posts);
     }
     fetchPosts();
   }, []);
 
-  const serchedPost = searchPost(showPosts, searchQuery);
-  toggleOrderData(order, showPosts);
+  useEffect(() => {
+    const fetchSeachPost = async () => {
+      const post = await searchData(BASE_URL, query);
+      setSearchedPosts(post);
+    }
+    fetchSeachPost();
+  }, [query]);
 
-  const handleLoadMore = () => setNext(Number(limit) + next);
-
-  const handleToggleView = () => {
-    setListView(!listView);
-    setGridView(!gridView);
-  }
-
-  const handleDeletePost = (id) => {
-    setShowPosts((serchedPost) => serchedPost.filter(post => post.id !== id));
-  }
-
-  const countPages = Math.ceil(allPosts.length / limit);
+  console.log(posts);
 
   return (
     <div className="uk-main">
-      <Header
-        handleDeletePost={handleDeletePost}
-        posts={serchedPost}
-      />
       <div class="uk-section">
         <div class="uk-container">
           <NavBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setOrder={setOrder}
+            query={query}
+            setQuery={setQuery}
             setLimit={setLimit}
-            gridView={gridView}
-            listView={listView}
-            handleToggleView={handleToggleView}
-          />
-          {gridView && <PostsGridPage serchedPost={serchedPost} />}
-          {listView && <PostsListPage serchedPost={serchedPost} />}
-          <LoadMore
-            handleLoadMore={handleLoadMore}
-          />
-          <PageList
-            countPages={countPages}
-            page={page}
-            setPage={setPage}
+          />  
+          <PostsGridPage
+            posts={query ? searchedPosts : posts}
           />
         </div>
       </div>

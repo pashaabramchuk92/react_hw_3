@@ -1,4 +1,4 @@
-import PostListView from "../components/PostListView"
+import PostListView from "./PostListView"
 
 const PostsListPage = ({ serchedPost }) => {
   return (
