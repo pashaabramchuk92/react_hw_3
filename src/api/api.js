@@ -11,15 +11,6 @@ const getData = async (url, page, limit, order, query) => {
     );
 }
 
-<<<<<<< HEAD
-const searchData = async (url, query) => {
-  return await fetcher(`${url}?q=${query}`)
-}
-
-export {
-  getData,
-  searchData,
-=======
 const getTotalCount = async (url, page) => {
   const resp = await fetch(`${url}?_page=${page}`);
   return resp.headers.get('X-Total-Count');
@@ -32,5 +23,4 @@ export {
   getData,
   getMoreData,
   getTotalCount
->>>>>>> e52f230be94ad8a0e6d149e241376ad80d92c868
 }
