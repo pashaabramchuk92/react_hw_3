@@ -12,6 +12,8 @@ const App = () => {
   const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
   const [posts, setPosts] = useState([]);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
   const [query, setQuery] = useState('');
@@ -75,6 +77,8 @@ const App = () => {
             setLimit={setLimit}
             gridView={gridView}
             handleToggleView={handleToggleView}
+            isLoadingSearch={isLoadingSearch}
+            setIsLoadingSearch={setIsLoadingSearch}
           />
           {gridView  
             ? <PostsGridPage
@@ -84,9 +88,17 @@ const App = () => {
                 getLikedPosts={getLikedPosts}
                 setLikedPosts={setLikedPosts}
               />
-            : <PostsListPage posts={posts} />}
+            : <PostsListPage
+                posts={posts}
+                saveLikePost={saveLikePost}
+                deleteLikePost={deleteLikePost}
+                getLikedPosts={getLikedPosts}
+                setLikedPosts={setLikedPosts}
+              />}
           <LoadMore
             handleLoadMore={handleLoadMore}
+            isLoadingMore={isLoadingMore}
+            setIsLoadingMore={setIsLoadingMore}
           />
           <PageList
             total={total}

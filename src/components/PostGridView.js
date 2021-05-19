@@ -7,7 +7,9 @@ const PostGridView = ({
   getLikedPosts,
   setLikedPosts
 }) => {
+  
   const [isLike, setIsLike] = useState(false);
+
   useEffect(()=> {
     setIsLike(post.title === getLikedPosts(post.id));
 
@@ -32,7 +34,7 @@ const PostGridView = ({
       <div className="uk-card uk-card-default uk-margin-medium-bottom">
           <div className="uk-card-header">
               <h3 className="uk-card-title uk-margin-remove-bottom uk-flex uk-flex-middle uk-flex-between">
-                {`${post.title.slice(0, 6)}...`} {post.id}
+                {`${post.title.slice(0, 6)}...`}
                 <a
                   href="/"
                   className="uk-icon-link"
@@ -49,9 +51,7 @@ const PostGridView = ({
                       deleteLikePost(post.id);
                     }
                   }}
-                >
-
-                </a>
+                ></a>
               </h3>
           </div>
           <div className="uk-card-body">

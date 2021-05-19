@@ -7,7 +7,7 @@ const getData = async (url, page, limit, order, query) => {
   return (
     await fetcher(
       `${url}?_page=${page}&_limit=${limit}
-      &_sort=id&_order=${order}&q=${query}`)
+      &_sort=title&_order=${order}&q=${query}`)
     );
 }
 

@@ -9,11 +9,15 @@ const NavBar = ({
   setLimit,
   gridView,
   handleToggleView,
+  isLoadingSearch,
+  setIsLoadingSearch
 }) => {
   return (
     <div class="uk-margin-medium-bottom uk-flex">
       <SearchBar
         setQuery={setQuery}
+        isLoadingSearch={isLoadingSearch}
+        setIsLoadingSearch={setIsLoadingSearch}
       />
       <FilterPosts
         setOrder={setOrder}
