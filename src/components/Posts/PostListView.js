@@ -1,39 +1,27 @@
 import { useEffect, useState } from "react";
+import { useBlog } from "../../BlogContext";
 
-const PostListView = ({
-  post,
-  saveLikePost,
-  deleteLikePost,
-  getLikedPosts,
-  setLikedPosts
-}) => {
+const PostListView = ({ post }) => {
 
-  const [isLike, setIsLike] = useState(false);
+  const {
+    setContextIsLike,
+    saveLikedPost,
+    deleteLikedPost,
+    getLikedPost,
+    contextIsLike
+  } = useBlog();
 
-  useEffect(()=> {
-    setIsLike(post.title === getLikedPosts(post.id));
+  const [isLike, setIsLike] = useState(contextIsLike);
 
-    const createLikedPostsArr = () => {
-      const likedPostsArr = [];
-      const keys = Object.keys(localStorage);
-
-      for(const key of keys) {
-        likedPostsArr.push({title: getLikedPosts(key), id: key});
-      }
-
-      return likedPostsArr;
-    }
-    setLikedPosts(post.title === getLikedPosts(post.id) 
-    ? createLikedPostsArr
-    : []);
-
-  }, [isLike]);
+  useEffect(() => {
+    setIsLike(post.title === getLikedPost(post.id));
+  }, [isLike, contextIsLike, getLikedPost, post.id, post.title]);
 
   return (
     <div>
       <div
         className="uk-card uk-card-default uk-margin-medium-bottom uk-child-width-1-2@s uk-grid-collapse uk-margin uk-grid"
-        uk-grid
+        uk-grid="true"
       >
         <div className="uk-card-media-left uk-cover-container uk-first-column">
           <img src="https://picsum.photos/600/400" alt="" className="uk-cover" />
@@ -47,29 +35,34 @@ const PostListView = ({
                   href="/"
                   className="uk-icon-link"
                   uk-icon="heart"
-                  style={{color: isLike ? 'red' : ''}}
+                  style={{'cursor': 'pointer', color: isLike ? 'red' : ''}}
                   onClick={(e) => {
                     e.preventDefault();
-
+                    saveLikedPost(post.id, post.title);
                     setIsLike(true);
-                    saveLikePost(post.id, post.title);
+                    setContextIsLike(true);
 
                     if(isLike) {
                       setIsLike(false);
-                      deleteLikePost(post.id);
+                      setContextIsLike(false);
+                      deleteLikedPost(post.id);
                     }
                   }}
-                ></a>
+                > </a>
               </h3>
             <p>
               {`${post.body.slice(0, 70)}...`}
             </p>
-            <a href="post.html" className="uk-button uk-button-text">Read more</a>
+            <a
+              href="/"
+              className="uk-button uk-button-text"
+              onClick={e => e.preventDefault()}
+            >Read more</a>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default PostListView;

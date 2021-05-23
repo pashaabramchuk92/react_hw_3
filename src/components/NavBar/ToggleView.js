@@ -1,18 +1,19 @@
-const ToggleView = ({ gridView, handleToggleView }) => {
-  const activeClassGrid = gridView ? 'uk-active' : '';
-  const activeClassList = gridView ? '' : 'uk-active';
+const ToggleView = ({ viewGrid, viewList, setViewGrid, setViewList }) => {
+
+  const activeClassGrid = viewGrid ? 'uk-active' : '';
+  const activeClassList = viewList ? 'uk-active' : '';
 
   return (
     <div className="uk-button-group uk-margin-left">
       <button
         className={"uk-button uk-button-default" + activeClassGrid}
-        onClick={handleToggleView}
+        onClick={() => {setViewGrid(true); setViewList(false)}}
       >
         <span uk-icon="icon:  grid"></span>
       </button>
       <button
         className={"uk-button uk-button-default" + activeClassList}
-        onClick={handleToggleView}
+        onClick={() => {setViewGrid(false); setViewList(true)}}
       >
         <span uk-icon="icon:  list"></span>
       </button>

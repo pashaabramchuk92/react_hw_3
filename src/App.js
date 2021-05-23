@@ -1,114 +1,100 @@
 import { useEffect, useState } from "react";
 
 import { getData, getMoreData, getTotalCount } from './api/api';
+import useDebounce from './hooks/useDebounce';
+import { BlogProvider } from './BlogContext';
+
 import LoadMore from "./components/LoadMore";
-import PostsGridPage from "./components/PostsGridPage";
-import PostsListPage from "./components/PostsListPage";
-import NavBar from "./components/NavBar";
+import PostsGridPage from "./components/Posts/PostsGridPage";
+import PostsListPage from "./components/Posts/PostsListPage";
+import NavBar from "./components/NavBar/NavBar";
 import PageList from "./components/PageList";
 import Header from "./components/Header";
 
 const App = () => {
-  const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
   const [posts, setPosts] = useState([]);
-  const [isLoadingSearch, setIsLoadingSearch] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
-  const [query, setQuery] = useState('');
   const [order, setOrder] = useState('asc');
-  const [gridView, setGridView] = useState(true);
+  const [query, setQuery] = useState('');
+  const [total, setTotal] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [viewGrid, setViewGrid] = useState(true);
+  const [viewList, setViewList] = useState(false);
   const [next, setNext] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [likedPosts, setLikedPosts] = useState([]);
+  const [isLoading, setIsLoding] = useState(false);
+
+  const debouncedValue = useDebounce(query, 500);
 
   useEffect(() => {
     const fetchTotal = async () => {
-      const totalCount = await getTotalCount(BASE_URL, page);
+      const totalCount = await getTotalCount(page);
       setTotal(totalCount);
-    }
+    };
     fetchTotal();
-  }, [total]);
+  }, [total, page]);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const posts = await getData(BASE_URL, page, limit, order, query);
-      setPosts(posts);
+      const data = await getData(page, limit, order, debouncedValue);
+      setPosts(data);
+      setIsSearching(false);
     }
     fetchPosts();
-  }, [page, limit, order, query]);
+  }, [debouncedValue, page, limit, order]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await getMoreData(BASE_URL, 0, next + limit, order);
-      setPosts(posts);
+    const fetchMorePosts = async () => {
+      const morePosts = await getMoreData(0, next + limit, order);
+      setPosts(morePosts);
+      setIsLoding(false);
     }
-    fetchPosts();
-  }, [next, order]);
-
-  const handleToggleView = () => setGridView(!gridView);
+    fetchMorePosts();
+  }, [next, limit, order]);
 
   const handleLoadMore = () => {
     setQuery('');
     setNext(next + Number(limit));
-  };
-
-  const saveLikePost = (id, post) => localStorage.setItem(id, post);
-  const deleteLikePost = (id) => {
-    setLikedPosts(likedPosts.filter(post => id !== post.id));
-    localStorage.removeItem(id);
-  };
-  const getLikedPosts = (id) => localStorage.getItem(id);
-
+  }
 
   return (
-    <div className="uk-main">
-      <Header
-        likedPosts={likedPosts}
-        deleteLikePost={deleteLikePost}
-        setLikedPosts={setLikedPosts}
-      />
-      <div class="uk-section">
-        <div class="uk-container">
-          <NavBar
-            setQuery={setQuery}
-            setOrder={setOrder}
-            setLimit={setLimit}
-            gridView={gridView}
-            handleToggleView={handleToggleView}
-            isLoadingSearch={isLoadingSearch}
-            setIsLoadingSearch={setIsLoadingSearch}
-          />
-          {gridView  
-            ? <PostsGridPage
-                posts={posts}
-                saveLikePost={saveLikePost}
-                deleteLikePost={deleteLikePost}
-                getLikedPosts={getLikedPosts}
-                setLikedPosts={setLikedPosts}
-              />
-            : <PostsListPage
-                posts={posts}
-                saveLikePost={saveLikePost}
-                deleteLikePost={deleteLikePost}
-                getLikedPosts={getLikedPosts}
-                setLikedPosts={setLikedPosts}
-              />}
-          <LoadMore
-            handleLoadMore={handleLoadMore}
-            isLoadingMore={isLoadingMore}
-            setIsLoadingMore={setIsLoadingMore}
-          />
-          <PageList
-            total={total}
-            limit={limit}
-            page={page}
-            setPage={setPage}
-          />
+    <BlogProvider>
+      <div className="uk-main">
+        <Header />
+        <div className="uk-section">
+          <div className="uk-container">
+            <NavBar
+              setIsSearching={setIsSearching}
+              isSearching={isSearching}
+              setQuery={setQuery}
+              setOrder={setOrder}
+              setLimit={setLimit}
+              viewGrid={viewGrid}
+              viewList={viewList}
+              setViewGrid={setViewGrid}
+              setViewList={setViewList}
+            />
+            {
+              viewGrid 
+              ? <PostsGridPage posts={posts} /> 
+              : <PostsListPage posts={posts} />
+            }
+            <LoadMore
+              handleLoadMore={handleLoadMore}
+              isLoading={isLoading}
+              setIsLoding={setIsLoding}
+            />
+            <PageList
+              total={total}
+              limit={limit}
+              page={page}
+              setPage={setPage}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </BlogProvider>
   );
 }
 
